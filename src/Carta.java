@@ -1,6 +1,6 @@
 public class Carta {
-    private Valor valor;
-    private Palo palo;
+    private final Valor valor;
+    private final Palo palo;
 
     public Carta (Valor valor,Palo palo){
         this.valor = valor;

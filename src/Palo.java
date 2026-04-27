@@ -1,3 +1,6 @@
 public enum Palo {
-    CORAZONES, DIAMANTES, TREBOLES, PICAS
+    CORAZONES,
+    DIAMANTES,
+    TREBOLES,
+    PICAS
 }

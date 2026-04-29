@@ -18,6 +18,7 @@ public class Jugador {
         System.out.println("Mano de " + nombre + ":");
         for (int i = 0; i < mano.size(); i++) {
             System.out.println(mano.get(i));
+
         }
     }
 }

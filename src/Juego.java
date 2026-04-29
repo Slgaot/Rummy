@@ -20,6 +20,7 @@ public class Juego {
         for (int i = 0; i < jugadores.size(); i++) {
             jugadores.get(i).mostrarMano();
             System.out.println();
+
         }
 
         System.out.println("Cartas restantes: " + mazo.cartasRestantes());

@@ -1,9 +1,13 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Juego {
     public static void main(String[] args) {
 
+        Scanner sc = new Scanner(System.in);
+
         Mazo mazo = new Mazo();
+
         Jugador j1 = new Jugador("Juan");
         Jugador j2 = new Jugador("Ana");
 
@@ -11,44 +15,58 @@ public class Juego {
         jugadores.add(j1);
         jugadores.add(j2);
 
-        //bucle para robar cartas
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < jugadores.size(); j++) {
                 jugadores.get(j).recibirCarta(mazo.robarCarta());
             }
         }
 
-        //bucle para mostrar las manos de los jugadores anteriormente robadas
-        for (int i = 0; i < jugadores.size(); i++) {
-            jugadores.get(i).mostrarMano();
-            System.out.println();
-
-        }
-
-        System.out.println("Cartas restantes: " + mazo.cartasRestantes());
-
-
-        System.out.println();
-
-
         Descarte descarte = new Descarte();
-        Carta cartaDescartada = j1.descartarCarta(0);
-        Carta cartaDescartada2 = j2.descartarCarta(0);
-        descarte.descartar(cartaDescartada);
-        descarte.descartar(cartaDescartada2);
 
-        System.out.println("Descartó: " + cartaDescartada);
-        System.out.println("Tope del descarte: " + descarte.verTope());
+        descarte.descartar(mazo.robarCarta());
 
-        j1.recibirCarta(Descarte.robar());
+        int turno = 0;
 
-        for (int i = 0; i < jugadores.size(); i++) {
-            jugadores.get(i).mostrarMano();
-            System.out.println();
+        while (true) {
 
+            Jugador jugadorActual = jugadores.get(turno);
+
+            System.out.println("\nTurno de: " + jugadorActual.getNombre());
+
+            System.out.println("1. Robar del mazo");
+            System.out.println("2. Robar del descarte");
+
+            int opcion = sc.nextInt();
+
+            Carta robada;
+
+            if (opcion == 2 && descarte.verTope() != null) {
+                robada = descarte.robar();
+                System.out.println("Robaste del descarte: " + robada);
+            } else {
+                robada = mazo.robarCarta();
+                System.out.println("Robaste del mazo: " + robada);
+            }
+
+            jugadorActual.recibirCarta(robada);
+
+            jugadorActual.mostrarMano();
+
+            int indice;
+
+            do {
+                System.out.print("Elige índice de carta a descartar: ");
+                indice = sc.nextInt();
+            } while (indice < 0 || indice >= jugadorActual.cantidadCartas());
+
+            Carta descartada = jugadorActual.descartarCarta(indice);
+            descarte.descartar(descartada);
+
+            System.out.println("Descartaste: " + descartada);
+
+            System.out.println("Tope del descarte: " + descarte.verTope());
+
+            turno = (turno + 1) % jugadores.size();
         }
-
-        System.out.println("Tope del descarte: " + descarte.verTope());
-
     }
 }

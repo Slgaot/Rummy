@@ -10,20 +10,23 @@ public class Jugador {
         this.mano = new ArrayList<>();
     }
 
-    //con el add añado cartas a la array list, le meto una variable para despues usarla con robarCarta de LA CLASE mazo.
+    public String getNombre() {
+        return nombre;
+    }
+
     public void recibirCarta(Carta carta){
         mano.add(carta);
     }
 
-    //metodo para ver la mano del jugador
     public void mostrarMano() {
         System.out.println("Mano de " + nombre + ":");
         for (int i = 0; i < mano.size(); i++) {
             System.out.println(mano.get(i));
-
         }
     }
-
+    public int cantidadCartas() {
+        return mano.size();
+    }
     public Carta descartarCarta(int indice) {
         if (indice >= 0 && indice < mano.size()) {
             return mano.remove(indice);

@@ -17,6 +17,7 @@ public class Carta {
 
     @Override
     public String toString() {
-        return valor + " de " + palo;
+        return valor.getNumero() + " " + palo.getSimbolo();
     }
+
 }

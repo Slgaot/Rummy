@@ -21,7 +21,7 @@ public class Jugador {
     public void mostrarMano() {
         System.out.println("Mano de " + nombre + ":");
         for (int i = 0; i < mano.size(); i++) {
-            System.out.println(mano.get(i));
+            System.out.println(i + ": " + mano.get(i));
         }
     }
     public int cantidadCartas() {

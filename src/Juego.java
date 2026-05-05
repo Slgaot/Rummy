@@ -6,6 +6,7 @@ public class Juego {
 
         Scanner sc = new Scanner(System.in);
 
+
         Mazo mazo = new Mazo();
 
         Jugador j1 = new Jugador("Juan");

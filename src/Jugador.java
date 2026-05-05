@@ -27,6 +27,7 @@ public class Jugador {
     public int cantidadCartas() {
         return mano.size();
     }
+
     public Carta descartarCarta(int indice) {
         if (indice >= 0 && indice < mano.size()) {
             return mano.remove(indice);

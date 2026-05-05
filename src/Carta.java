@@ -17,7 +17,20 @@ public class Carta {
 
     @Override
     public String toString() {
-        return valor.getNumero() + " " + palo.getSimbolo();
+        String color;
+
+        switch (palo) {
+            case CORAZONES:
+            case DIAMANTES:
+                color = "\u001B[31m"; // rojo
+                break;
+            default:
+                color = "\u001B[30m"; // negro
+        }
+
+        return color + valor.getNumero() + " " + palo.getSimbolo() + "\u001B[0m";
     }
+
+
 
 }

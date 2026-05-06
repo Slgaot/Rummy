@@ -22,10 +22,10 @@ public class Carta {
         switch (palo) {
             case CORAZONES:
             case DIAMANTES:
-                color = "\u001B[31m"; // rojo
+                color = "\u001B[31m";
                 break;
             default:
-                color = "\u001B[30m"; // negro
+                color = "\u001B[30m";
         }
 
         return color + valor.getNumero() + " " + palo.getSimbolo() + "\u001B[0m";

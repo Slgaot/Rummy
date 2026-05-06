@@ -5,8 +5,6 @@ public class Juego {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-
-
         Mazo mazo = new Mazo();
 
         Jugador j1 = new Jugador("Juan");
@@ -16,7 +14,7 @@ public class Juego {
         jugadores.add(j1);
         jugadores.add(j2);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < jugadores.size(); j++) {
                 jugadores.get(j).recibirCarta(mazo.robarCarta());
             }
@@ -53,11 +51,20 @@ public class Juego {
 
             jugadorActual.mostrarMano();
 
+            if (jugadorActual.tieneTrio()) {
+                System.out.println("¡Tienes un trío!");
+            }
+
+            if (jugadorActual.tieneEscalera()) {
+                System.out.println("¡Tienes una escalera!");
+            }
+
             int indice;
 
             do {
                 System.out.print("Elige índice de carta a descartar: ");
                 indice = sc.nextInt();
+
             } while (indice < 0 || indice >= jugadorActual.cantidadCartas());
 
             Carta descartada = jugadorActual.descartarCarta(indice);

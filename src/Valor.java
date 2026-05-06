@@ -22,4 +22,13 @@ public enum Valor {
     public int getNumero() {
         return numero;
     }
+    public String getSimbolo() {
+        switch (this) {
+            case AS: return "A";
+            case J: return "J";
+            case Q: return "Q";
+            case K: return "K";
+            default: return String.valueOf(numero);
+        }
+    }
 }

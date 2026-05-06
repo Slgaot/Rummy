@@ -28,9 +28,7 @@ public class Carta {
                 color = "\u001B[30m";
         }
 
-        return color + valor.getNumero() + " " + palo.getSimbolo() + "\u001B[0m";
+        return color + valor.getSimbolo() + " " + palo.getSimbolo() + "\u001B[0m";
     }
-
-
 
 }

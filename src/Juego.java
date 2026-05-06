@@ -14,7 +14,7 @@ public class Juego {
         jugadores.add(j1);
         jugadores.add(j2);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < jugadores.size(); j++) {
                 jugadores.get(j).recibirCarta(mazo.robarCarta());
             }
@@ -25,6 +25,8 @@ public class Juego {
         descarte.descartar(mazo.robarCarta());
 
         int turno = 0;
+
+        Mesa mesa = new Mesa();
 
         while (true) {
 
@@ -58,6 +60,15 @@ public class Juego {
             if (jugadorActual.tieneEscalera()) {
                 System.out.println("¡Tienes una escalera!");
             }
+
+            ArrayList<Carta> trio = jugadorActual.obtenerTrio();
+
+            if (trio != null) {
+                mesa.agregarCombinacion(trio);
+                System.out.println("¡Has bajado un trío!");
+            }
+
+            mesa.mostrarMesa();
 
             int indice;
 

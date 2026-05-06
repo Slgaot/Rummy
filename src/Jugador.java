@@ -98,4 +98,31 @@ public class Jugador {
 
         return false;
     }
+    public ArrayList<Carta> obtenerTrio() {
+
+        ArrayList<Carta> trio = new ArrayList<>();
+
+        for (int i = 0; i < mano.size(); i++) {
+
+            Valor valorActual = mano.get(i).getValor();
+            trio.clear();
+
+            for (int j = 0; j < mano.size(); j++) {
+                if (mano.get(j).getValor() == valorActual) {
+                    trio.add(mano.get(j));
+                }
+            }
+
+            if (trio.size() >= 3) {
+
+                for (Carta c : trio) {
+                    mano.remove(c);
+                }
+
+                return trio;
+            }
+        }
+
+        return null;
+    }
 }

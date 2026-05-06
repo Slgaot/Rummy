@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Jugador {
 
@@ -64,34 +65,28 @@ public class Jugador {
 
         for (int i = 0; i < mano.size(); i++) {
 
+            Palo paloBase = mano.get(i).getPalo();
+
+            ArrayList<Integer> numeros = new ArrayList<>();
+
             for (int j = 0; j < mano.size(); j++) {
+                if (mano.get(j).getPalo() == paloBase) {
+                    numeros.add(mano.get(j).getValor().getNumero());
+                }
+            }
 
-                for (int k = 0; k < mano.size(); k++) {
+            Collections.sort(numeros);
 
-                    if (i != j && j != k && i != k) {
+            int consecutivas = 1;
 
-                        Carta c1 = mano.get(i);
-                        Carta c2 = mano.get(j);
-                        Carta c3 = mano.get(k);
-
-                        if (c1.getPalo() == c2.getPalo() &&
-                                c2.getPalo() == c3.getPalo()) {
-
-                            int v1 = c1.getValor().getNumero();
-                            int v2 = c2.getValor().getNumero();
-                            int v3 = c3.getValor().getNumero();
-
-                            if ((v1 + 1 == v2 && v2 + 1 == v3) ||
-                                    (v1 + 1 == v3 && v3 + 1 == v2) ||
-                                    (v2 + 1 == v1 && v1 + 1 == v3) ||
-                                    (v2 + 1 == v3 && v3 + 1 == v1) ||
-                                    (v3 + 1 == v1 && v1 + 1 == v2) ||
-                                    (v3 + 1 == v2 && v2 + 1 == v1)) {
-
-                                return true;
-                            }
-                        }
+            for (int k = 1; k < numeros.size(); k++) {
+                if (numeros.get(k) == numeros.get(k - 1) + 1) {
+                    consecutivas++;
+                    if (consecutivas >= 3) {
+                        return true;
                     }
+                } else {
+                    consecutivas = 1;
                 }
             }
         }
@@ -120,6 +115,50 @@ public class Jugador {
                 }
 
                 return trio;
+            }
+        }
+
+        return null;
+    }
+
+    public ArrayList<Carta> obtenerEscalera() {
+
+        for (int i = 0; i < mano.size(); i++) {
+
+            Palo paloBase = mano.get(i).getPalo();
+
+            ArrayList<Carta> posibles = new ArrayList<>();
+
+            for (int j = 0; j < mano.size(); j++) {
+                if (mano.get(j).getPalo() == paloBase) {
+                    posibles.add(mano.get(j));
+                }
+            }
+
+            posibles.sort((a, b) -> a.getValor().getNumero() - b.getValor().getNumero());
+
+            ArrayList<Carta> escalera = new ArrayList<>();
+            escalera.add(posibles.get(0));
+
+            for (int k = 1; k < posibles.size(); k++) {
+
+                int actual = posibles.get(k).getValor().getNumero();
+                int anterior = posibles.get(k - 1).getValor().getNumero();
+
+                if (actual == anterior + 1) {
+                    escalera.add(posibles.get(k));
+
+                    if (escalera.size() >= 3) {
+
+                        // quitar de la mano
+                        mano.removeAll(escalera);
+
+                        return escalera;
+                    }
+                } else {
+                    escalera.clear();
+                    escalera.add(posibles.get(k));
+                }
             }
         }
 

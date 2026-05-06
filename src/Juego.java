@@ -14,7 +14,7 @@ public class Juego {
         jugadores.add(j1);
         jugadores.add(j2);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < jugadores.size(); j++) {
                 jugadores.get(j).recibirCarta(mazo.robarCarta());
             }
@@ -66,6 +66,17 @@ public class Juego {
             if (trio != null) {
                 mesa.agregarCombinacion(trio);
                 System.out.println("¡Has bajado un trío!");
+                jugadorActual.mostrarMano();
+
+            }
+
+            ArrayList<Carta> escalera = jugadorActual.obtenerEscalera();
+
+            if (escalera != null) {
+                mesa.agregarCombinacion(escalera);
+                System.out.println("¡Has bajado una escalera!");
+                jugadorActual.mostrarMano();
+
             }
 
             mesa.mostrarMesa();

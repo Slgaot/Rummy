@@ -39,11 +39,20 @@ public class Jugador {
         return null;
     }
 
+    public boolean indiceValido(int i) {
+        return i >= 0 && i < mano.size();
+    }
+
     public ArrayList<Carta> seleccionarCartas(int[] indices) {
 
         ArrayList<Carta> seleccionadas = new ArrayList<>();
 
         for (int i = 0; i < indices.length; i++) {
+
+            if (!indiceValido(indices[i])) {
+                return null;
+            }
+
             seleccionadas.add(mano.get(indices[i]));
         }
 
@@ -102,5 +111,25 @@ public class Jugador {
 
     public void quitarCartas(ArrayList<Carta> cartas) {
         mano.removeAll(cartas);
+    }
+
+    public void ordenarPorValor() {
+        mano.sort((a, b) ->
+                a.getValor().getNumero() - b.getValor().getNumero()
+        );
+    }
+
+    public void ordenarPorPalo() {
+        mano.sort((a, b) -> {
+
+            int comp = a.getPalo().compareTo(b.getPalo());
+
+            if (comp == 0) {
+                return a.getValor().getNumero()
+                        - b.getValor().getNumero();
+            }
+
+            return comp;
+        });
     }
 }

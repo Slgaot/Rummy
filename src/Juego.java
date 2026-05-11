@@ -48,9 +48,11 @@ public class Juego {
                 System.out.println("\n1. Robar del mazo");
                 System.out.println("2. Robar del descarte");
                 System.out.println("3. Bajar combinación");
-                System.out.println("4. Mostrar mano");
-                System.out.println("5. Mostrar mesa");
-                System.out.println("6. Descartar carta");
+                System.out.println("4. Ordenar mano");
+                System.out.println("5. Mostrar mano");
+                System.out.println("6. Mostrar mesa");
+                System.out.println("7. Descartar carta");
+                System.out.println("8. Añadir cartas");
 
                 int opcion = sc.nextInt();
 
@@ -133,18 +135,39 @@ public class Juego {
                         break;
 
                     case 4:
+                        System.out.println("¿Cómo quieres ordenar la mano?");
+                        System.out.println("1. Por valor");
+                        System.out.println("2. Por palo");
 
-                        jugadorActual.mostrarMano();
+                        int opcionOrden = sc.nextInt();
+
+                        if (opcionOrden == 1) {
+                            jugadorActual.ordenarPorValor();
+                            System.out.println("Mano ordenada por valor");
+                        }
+                        else if (opcionOrden == 2) {
+                            jugadorActual.ordenarPorPalo();
+                            System.out.println("Mano ordenada por palo");
+                        }
+                        else {
+                            System.out.println("Opción inválida");
+                        }
 
                         break;
 
                     case 5:
 
-                        mesa.mostrarMesa();
+                        jugadorActual.mostrarMano();
 
                         break;
 
                     case 6:
+
+                        mesa.mostrarMesa();
+
+                        break;
+
+                    case 7:
 
                         if (!yaRobo) {
                             System.out.println("Debes robar antes de descartar");
@@ -154,25 +177,57 @@ public class Juego {
                         jugadorActual.mostrarMano();
 
                         System.out.print("Elige índice de carta a descartar: ");
-
                         int indice = sc.nextInt();
 
-                        if (indice >= 0 && indice < jugadorActual.cantidadCartas()) {
-
-                            Carta descartada = jugadorActual.descartarCarta(indice);
-
-                            descarte.descartar(descartada);
-
-                            System.out.println("Descartaste: " + descartada);
-
-                            turnoTerminado = true;
-
-                        } else {
+                        if (!jugadorActual.indiceValido(indice)) {
                             System.out.println("Índice inválido");
+                            break;
                         }
+
+                        Carta descartada = jugadorActual.descartarCarta(indice);
+
+                        if (descartada == null) {
+                            System.out.println("No se pudo descartar la carta");
+                            break;
+                        }
+
+                        descarte.descartar(descartada);
+
+                        System.out.println("Descartaste: " + descartada);
+
+                        turnoTerminado = true;
 
                         break;
 
+                    case 8:
+
+                        mesa.mostrarMesa();
+
+                        System.out.print("Elige combinación: ");
+                        int combo = sc.nextInt();
+
+                        jugadorActual.mostrarMano();
+
+                        System.out.print("Índice de carta: ");
+                        int indiceCarta = sc.nextInt();
+
+                        if (!jugadorActual.indiceValido(indiceCarta)) {
+                            System.out.println("Índice inválido");
+                            break;
+                        }
+
+                        Carta carta = jugadorActual.getMano().get(indiceCarta);
+
+                        boolean ok = mesa.agregarACartaACombinacion(combo, carta);
+
+                        if (ok) {
+                            jugadorActual.descartarCarta(indiceCarta);
+                            System.out.println("Carta añadida a la mesa");
+                        } else {
+                            System.out.println("Movimiento inválido");
+                        }
+
+                        break;
                     default:
                         System.out.println("Opción inválida");
                 }

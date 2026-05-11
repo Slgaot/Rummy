@@ -90,4 +90,15 @@ public class Mesa {
 
         return true;
     }
+
+    public int calcularPuntos(ArrayList<Carta> cartas) {
+
+        int total = 0;
+
+        for (Carta c : cartas) {
+            total += c.getValor().getNumero();
+        }
+
+        return total;
+    }
 }

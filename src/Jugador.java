@@ -132,4 +132,14 @@ public class Jugador {
             return comp;
         });
     }
+
+    private boolean primeraBajadaHecha = false;
+
+    public boolean haHechoPrimeraBajada() {
+        return primeraBajadaHecha;
+    }
+
+    public void marcarPrimeraBajada() {
+        primeraBajadaHecha = true;
+    }
 }

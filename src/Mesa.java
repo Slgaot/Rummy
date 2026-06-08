@@ -93,12 +93,19 @@ public class Mesa {
 
     public int calcularPuntos(ArrayList<Carta> cartas) {
 
-        int total = 0;
+        int puntos = 0;
 
         for (Carta c : cartas) {
-            total += c.getValor().getNumero();
+
+            int valor = c.getValor().getNumero();
+
+            if (valor > 10) {
+                puntos += 10;
+            } else {
+                puntos += valor;
+            }
         }
 
-        return total;
+        return puntos;
     }
 }

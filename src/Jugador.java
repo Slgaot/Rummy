@@ -53,6 +53,13 @@ public class Jugador {
                 return null;
             }
 
+            for (int j = i + 1; j < indices.length; j++) {
+
+                if (indices[i] == indices[j]) {
+                    return null;
+                }
+            }
+
             seleccionadas.add(mano.get(indices[i]));
         }
 

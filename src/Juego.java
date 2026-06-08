@@ -44,6 +44,7 @@ public class Juego {
             boolean turnoTerminado = false;
             boolean yaRobo = false;
 
+            ArrayList<ArrayList<Carta>> bajadasTurno = new ArrayList<>();
             int puntosBajadaTurno = 0;
 
             System.out.println("\n======================");
@@ -103,50 +104,46 @@ public class Juego {
                             break;
                         }
 
-                        boolean seguirBajando = true;
+                        jugadorActual.mostrarMano();
 
-                        while (seguirBajando) {
+                        System.out.println("¿Cuántas cartas?");
+                        int cantidad = sc.nextInt();
 
-                            jugadorActual.mostrarMano();
+                        int[] indices = new int[cantidad];
 
-                            System.out.println("¿Cuántas cartas?");
-                            int cantidad = sc.nextInt();
+                        for (int i = 0; i < cantidad; i++) {
 
-                            int[] indices = new int[cantidad];
+                            System.out.print("Índice " + (i + 1) + ": ");
+                            indices[i] = sc.nextInt();
+                        }
 
-                            for (int i = 0; i < cantidad; i++) {
-                                System.out.print("Índice " + (i + 1) + ": ");
-                                indices[i] = sc.nextInt();
-                            }
+                        ArrayList<Carta> seleccionadas =
+                                jugadorActual.seleccionarCartas(indices);
 
-                            ArrayList<Carta> seleccionadas =
-                                    jugadorActual.seleccionarCartas(indices);
+                        if (seleccionadas == null) {
+                            System.out.println("Selección inválida");
+                            break;
+                        }
 
-                            if (seleccionadas == null) {
-                                System.out.println("Selección inválida");
-                                continue;
-                            }
+                        if (jugadorActual.esTrio(seleccionadas)
+                                || jugadorActual.esEscalera(seleccionadas)) {
 
-                            if (jugadorActual.esTrio(seleccionadas)
-                                    || jugadorActual.esEscalera(seleccionadas)) {
+                            bajadasTurno.add(seleccionadas);
 
-                                mesa.agregarCombinacion(seleccionadas);
-                                jugadorActual.quitarCartas(seleccionadas);
+                            jugadorActual.quitarCartas(seleccionadas);
 
-                                int puntos = mesa.calcularPuntos(seleccionadas);
-                                puntosBajadaTurno += puntos;
+                            int puntos = mesa.calcularPuntos(seleccionadas);
+                            puntosBajadaTurno += puntos;
 
-                                System.out.println("✔ Bajada OK (" + puntos + " puntos)");
-                            } else {
-                                System.out.println("❌ Combinación inválida");
-                            }
+                            System.out.println("✔ Combinación válida (" +
+                                    puntos + " puntos)");
 
-                            System.out.println("¿Seguir bajando? (1=Sí / 2=No)");
-                            int resp = sc.nextInt();
+                            System.out.println("Total acumulado: " +
+                                    puntosBajadaTurno);
 
-                            if (resp == 2) {
-                                seguirBajando = false;
-                            }
+                        } else {
+
+                            System.out.println("Combinación inválida");
                         }
 
                         break;
@@ -250,18 +247,62 @@ public class Juego {
 
                     case 9:
 
+                        if (bajadasTurno.isEmpty()) {
+                            System.out.println("No has preparado ninguna combinación");
+                            break;
+                        }
+
                         if (!jugadorActual.haHechoPrimeraBajada()) {
 
                             if (puntosBajadaTurno >= 30) {
+
+                                for (ArrayList<Carta> combinacion : bajadasTurno) {
+
+                                    mesa.agregarCombinacion(combinacion);
+                                }
+
                                 jugadorActual.marcarPrimeraBajada();
-                                System.out.println("✔ Primera bajada completada");
+
+                                System.out.println(
+                                        "✔ Primera bajada completada (" +
+                                                puntosBajadaTurno +
+                                                " puntos)"
+                                );
+
+                                bajadasTurno.clear();
+                                puntosBajadaTurno = 0;
+
                             } else {
-                                System.out.println("❌ Necesitas mínimo 30 puntos en este turno");
-                                break; // no termina turno
+
+                                System.out.println(
+                                        "Necesitas al menos 30 puntos. Llevas "
+                                                + puntosBajadaTurno
+                                );
+
+                                for (ArrayList<Carta> combinacion : bajadasTurno) {
+
+                                    for (Carta c : combinacion) {
+                                        jugadorActual.recibirCarta(c);
+                                    }
+                                }
+
+                                bajadasTurno.clear();
+                                puntosBajadaTurno = 0;
                             }
+
+                        } else {
+
+                            for (ArrayList<Carta> combinacion : bajadasTurno) {
+
+                                mesa.agregarCombinacion(combinacion);
+                            }
+
+                            System.out.println("✔ Combinaciones bajadas");
+
+                            bajadasTurno.clear();
+                            puntosBajadaTurno = 0;
                         }
 
-                        System.out.println("Bajadas finalizadas");
                         break;
 
                     default:

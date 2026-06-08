@@ -49,46 +49,78 @@ public class Mesa {
 
     public boolean esValida(ArrayList<Carta> combo) {
 
-        if (combo.size() < 3) return false;
+        if (combo.size() < 3) {
+            return false;
+        }
 
-        boolean mismoValor = true;
+        // ===== TRÍO =====
 
-        Valor v = combo.get(0).getValor();
+        Valor valorBase = null;
+        boolean esTrio = true;
 
         for (Carta c : combo) {
-            if (c.getValor() != v) {
-                mismoValor = false;
-                break;
+
+            if (!c.esJoker()) {
+
+                if (valorBase == null) {
+                    valorBase = c.getValor();
+                }
+                else if (c.getValor() != valorBase) {
+                    esTrio = false;
+                    break;
+                }
             }
         }
 
-        if (mismoValor) return true;
+        if (esTrio) {
+            return true;
+        }
 
-        ArrayList<Carta> copia = new ArrayList<>(combo);
+        // ===== ESCALERA =====
 
-        Collections.sort(copia, (a, b) ->
-                a.getValor().getNumero() - b.getValor().getNumero()
-        );
+        ArrayList<Carta> normales = new ArrayList<>();
+        int jokers = 0;
 
-        Palo p = copia.get(0).getPalo();
+        for (Carta c : combo) {
 
-        for (Carta c : copia) {
-            if (c.getPalo() != p) {
+            if (c.esJoker()) {
+                jokers++;
+            } else {
+                normales.add(c);
+            }
+        }
+
+        if (normales.isEmpty()) {
+            return true;
+        }
+
+        Palo paloBase = normales.get(0).getPalo();
+
+        for (Carta c : normales) {
+
+            if (c.getPalo() != paloBase) {
                 return false;
             }
         }
 
-        for (int i = 1; i < copia.size(); i++) {
+        Collections.sort(normales, (a, b) ->
+                a.getValor().getNumero()
+                        - b.getValor().getNumero());
 
-            int anterior = copia.get(i - 1).getValor().getNumero();
-            int actual = copia.get(i).getValor().getNumero();
+        int faltantes = 0;
 
-            if (actual != anterior + 1) {
-                return false;
-            }
+        for (int i = 1; i < normales.size(); i++) {
+
+            int anterior =
+                    normales.get(i - 1).getValor().getNumero();
+
+            int actual =
+                    normales.get(i).getValor().getNumero();
+
+            faltantes += (actual - anterior - 1);
         }
 
-        return true;
+        return faltantes <= jokers;
     }
 
     public int calcularPuntos(ArrayList<Carta> cartas) {

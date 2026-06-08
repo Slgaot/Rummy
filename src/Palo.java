@@ -1,4 +1,6 @@
 public enum Palo {
+
+    NINGUNO("★"),
     CORAZONES("♥"),
     DIAMANTES("♦"),
     TREBOLES("♣"),

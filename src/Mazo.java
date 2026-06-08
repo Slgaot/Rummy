@@ -13,15 +13,24 @@ public class Mazo {
 
     private void crearMazo() {
 
-        for (int i = 0; i < Palo.values().length; i++) {
-            for (int j = 0; j < Valor.values().length; j++) {
+        for (Palo palo : Palo.values()) {
 
-                Palo palo = Palo.values()[i];
-                Valor valor = Valor.values()[j];
+            if (palo == Palo.NINGUNO) {
+                continue;
+            }
+
+            for (Valor valor : Valor.values()) {
+
+                if (valor == Valor.JOKER) {
+                    continue;
+                }
 
                 cartas.add(new Carta(valor, palo));
             }
         }
+
+        cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
+        cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
     }
 
     public void barajar() {
@@ -35,8 +44,15 @@ public class Mazo {
         return cartas.remove(0);
     }
 
-    public int cartasRestantes() {
-        return cartas.size();
+    public boolean estaVacio() {
+        return cartas.isEmpty();
+    }
+
+    public void agregarCartas(ArrayList<Carta> nuevasCartas) {
+
+        cartas.addAll(nuevasCartas);
+
+        Collections.shuffle(cartas);
     }
 }
 

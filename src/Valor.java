@@ -1,4 +1,5 @@
 public enum Valor {
+    JOKER(0),
     AS(1),
     DOS(2),
     TRES(3),
@@ -24,6 +25,7 @@ public enum Valor {
     }
     public String getSimbolo() {
         switch (this) {
+            case JOKER: return "JOKER";
             case AS: return "A";
             case J: return "J";
             case Q: return "Q";

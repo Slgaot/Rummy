@@ -80,8 +80,21 @@ public class Juego {
                         Carta robada;
 
                         if (opcion == 1) {
+
+                            if (mazo.estaVacio()) {
+
+                                System.out.println("Mazo vacío. Reciclando descarte...");
+
+                                ArrayList<Carta> recicladas =
+                                        descarte.recuperarCartasMenosTope();
+
+                                mazo.agregarCartas(recicladas);
+                            }
+
                             robada = mazo.robarCarta();
+
                         } else {
+
                             robada = descarte.robar();
                         }
 

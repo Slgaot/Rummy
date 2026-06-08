@@ -17,6 +17,11 @@ public class Carta {
 
     @Override
     public String toString() {
+
+        if (esJoker()) {
+            return "\u001B[35mJOKER ★\u001B[0m";
+        }
+
         String color;
 
         switch (palo) {
@@ -24,11 +29,16 @@ public class Carta {
             case DIAMANTES:
                 color = "\u001B[31m";
                 break;
+
             default:
                 color = "\u001B[30m";
         }
 
         return color + valor.getSimbolo() + " " + palo.getSimbolo() + "\u001B[0m";
+    }
+
+    public boolean esJoker() {
+        return valor == Valor.JOKER;
     }
 
 }

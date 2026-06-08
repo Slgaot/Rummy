@@ -72,11 +72,24 @@ public class Jugador {
             return false;
         }
 
-        Valor valorBase = cartas.get(0).getValor();
+        Valor valorBase = null;
 
-        for (int i = 1; i < cartas.size(); i++) {
+        for (Carta c : cartas) {
 
-            if (cartas.get(i).getValor() != valorBase) {
+            if (!c.esJoker()) {
+
+                valorBase = c.getValor();
+                break;
+            }
+        }
+
+        if (valorBase == null) {
+            return true;
+        }
+
+        for (Carta c : cartas) {
+
+            if (!c.esJoker() && c.getValor() != valorBase) {
                 return false;
             }
         }
@@ -90,30 +103,50 @@ public class Jugador {
             return false;
         }
 
-        Palo paloBase = cartas.get(0).getPalo();
+        ArrayList<Carta> normales = new ArrayList<>();
+        int jokers = 0;
 
-        for (int i = 1; i < cartas.size(); i++) {
+        for (Carta c : cartas) {
 
-            if (cartas.get(i).getPalo() != paloBase) {
+            if (c.esJoker()) {
+                jokers++;
+            } else {
+                normales.add(c);
+            }
+        }
+
+        if (normales.isEmpty()) {
+            return true;
+        }
+
+        Palo paloBase = normales.get(0).getPalo();
+
+        for (Carta c : normales) {
+
+            if (c.getPalo() != paloBase) {
                 return false;
             }
         }
 
-        cartas.sort((a, b) ->
-                a.getValor().getNumero() - b.getValor().getNumero()
+        normales.sort((a, b) ->
+                a.getValor().getNumero()
+                        - b.getValor().getNumero()
         );
 
-        for (int i = 1; i < cartas.size(); i++) {
+        int faltantes = 0;
 
-            int anterior = cartas.get(i - 1).getValor().getNumero();
-            int actual = cartas.get(i).getValor().getNumero();
+        for (int i = 1; i < normales.size(); i++) {
 
-            if (actual != anterior + 1) {
-                return false;
-            }
+            int anterior =
+                    normales.get(i - 1).getValor().getNumero();
+
+            int actual =
+                    normales.get(i).getValor().getNumero();
+
+            faltantes += (actual - anterior - 1);
         }
 
-        return true;
+        return faltantes <= jokers;
     }
 
     public void quitarCartas(ArrayList<Carta> cartas) {

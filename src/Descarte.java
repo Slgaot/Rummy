@@ -24,5 +24,16 @@ public class Descarte {
         }
         return pila.get(pila.size() - 1);
     }
+
+    public ArrayList<Carta> recuperarCartasMenosTope() {
+
+        ArrayList<Carta> cartas = new ArrayList<>();
+
+        while (pila.size() > 1) {
+            cartas.add(pila.remove(0));
+        }
+
+        return cartas;
+    }
 }
 

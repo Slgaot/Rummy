@@ -37,12 +37,17 @@ public class Juego {
 
         int turno = 0;
 
+        Reorganizacion reorganizacion = new Reorganizacion();
+        boolean modoReorganizacion = false;
+        ArrayList<ArrayList<Carta>> copiaMesa = new ArrayList<>();
+
         while (true) {
 
             Jugador jugadorActual = jugadores.get(turno);
 
             boolean turnoTerminado = false;
             boolean yaRobo = false;
+
 
             ArrayList<ArrayList<Carta>> bajadasTurno = new ArrayList<>();
             int puntosBajadaTurno = 0;
@@ -64,6 +69,9 @@ public class Juego {
                 System.out.println("7. Descartar carta");
                 System.out.println("8. Añadir carta a mesa");
                 System.out.println("9. Terminar bajadas");
+                System.out.println("10. Iniciar reorganización");
+                System.out.println("11. Confirmar reorganización");
+                System.out.println("12. Crear combinación reorganización");
 
                 int opcion = sc.nextInt();
 
@@ -315,6 +323,240 @@ public class Juego {
                             bajadasTurno.clear();
                             puntosBajadaTurno = 0;
                         }
+
+                        break;
+
+                    case 10:
+
+                        if (!jugadorActual.haHechoPrimeraBajada()) {
+
+                            System.out.println("Debes hacer la primera bajada.");
+                            break;
+                        }
+
+                        modoReorganizacion = true;
+
+                        reorganizacion.limpiar();
+
+                        copiaMesa.clear();
+
+                        for (ArrayList<Carta> c : mesa.getCombinaciones()) {
+
+                            copiaMesa.add(new ArrayList<>(c));
+                        }
+
+                        boolean seguirSacando = true;
+
+                        while (seguirSacando) {
+
+                            mesa.mostrarMesa();
+
+                            System.out.print("Índice de combinación (-1 para terminar): ");
+
+                            int indiceCombo = sc.nextInt();
+
+                            if (indiceCombo == -1) {
+                                break;
+                            }
+
+                            ArrayList<Carta> combinacion =
+                                    mesa.obtenerCombinacion(indiceCombo);
+
+                            if (combinacion == null) {
+
+                                System.out.println("Combinación inválida");
+                                continue;
+                            }
+
+                            reorganizacion.agregarCartas(
+                                    new ArrayList<>(combinacion));
+
+                            mesa.eliminarCombinacion(indiceCombo);
+
+                            System.out.println("Combinación extraída.");
+
+                            System.out.println("¿Extraer otra?");
+                            System.out.println("1. Sí");
+                            System.out.println("2. No");
+
+                            int opExtraer = sc.nextInt();
+
+                            if (opExtraer == 2) {
+                                seguirSacando = false;
+                            }
+                        }
+
+                        System.out.println();
+
+                        System.out.println("Ahora puedes añadir cartas de tu mano.");
+
+                        boolean seguirMano = true;
+
+                        while (seguirMano) {
+
+                            jugadorActual.mostrarMano();
+
+                            System.out.print("Índice (-1 para terminar): ");
+
+                            int indiceMano = sc.nextInt();
+
+                            if (indiceMano == -1) {
+                                break;
+                            }
+
+                            if (!jugadorActual.indiceValido(indiceMano)) {
+
+                                System.out.println("Índice inválido");
+                                continue;
+                            }
+
+                            Carta cartaReorganizacion =
+                                    jugadorActual.descartarCarta(indiceMano);
+
+                            reorganizacion.agregarCarta(cartaReorganizacion);
+
+                            reorganizacion.mostrarCartas();
+
+                            System.out.println("¿Añadir otra carta?");
+                            System.out.println("1. Sí");
+                            System.out.println("2. No");
+
+                            int opCarta = sc.nextInt();
+
+                            if (opCarta == 2) {
+                                seguirMano = false;
+                            }
+                        }
+
+                        reorganizacion.mostrarCartas();
+
+                        System.out.println();
+                        System.out.println("Usa ahora la opción 11 para crear nuevas combinaciones.");
+
+                        break;
+
+                    case 11:
+
+                        if (!modoReorganizacion) {
+
+                            System.out.println("No hay reorganización iniciada.");
+                            break;
+                        }
+
+                        reorganizacion.mostrarCartas();
+
+                        System.out.print("¿Cuántas cartas tendrá la combinación?: ");
+
+                        int cantidadNueva = sc.nextInt();
+
+                        int[] indicesNueva = new int[cantidadNueva];
+
+                        ArrayList<Carta> nuevaCombinacion = new ArrayList<>();
+
+                        boolean error = false;
+
+                        for (int i = 0; i < cantidadNueva; i++) {
+
+                            System.out.print("Índice " + (i + 1) + ": ");
+
+                            indicesNueva[i] = sc.nextInt();
+
+                            if (indicesNueva[i] < 0 ||
+                                    indicesNueva[i] >= reorganizacion.getCartas().size()) {
+
+                                error = true;
+                                break;
+                            }
+
+                            for (int j = 0; j < i; j++) {
+
+                                if (indicesNueva[i] == indicesNueva[j]) {
+
+                                    error = true;
+                                    break;
+                                }
+                            }
+
+                            if (error) {
+                                break;
+                            }
+
+                            nuevaCombinacion.add(
+                                    reorganizacion.getCartas().get(indicesNueva[i])
+                            );
+                        }
+
+                        if (error) {
+
+                            System.out.println("Selección inválida.");
+
+                            break;
+                        }
+
+                        if (!mesa.esValida(nuevaCombinacion)) {
+
+                            System.out.println("Combinación inválida.");
+
+                            break;
+                        }
+
+                        reorganizacion.agregarNuevaCombinacion(nuevaCombinacion);
+
+                        System.out.println("Combinación creada correctamente.");
+
+                        reorganizacion.mostrarCombinaciones();
+
+                        if (!reorganizacion.quedanCartas()) {
+
+                            System.out.println();
+                            System.out.println("No quedan cartas.");
+                            System.out.println("Ahora usa la opción 12 para confirmar.");
+                        }
+
+                        break;
+
+                    case 12:
+
+                        if (!modoReorganizacion) {
+
+                            System.out.println("No hay reorganización iniciada.");
+                            break;
+                        }
+
+                        if (reorganizacion.quedanCartas()) {
+
+                            System.out.println("Todavía quedan cartas sin colocar.");
+
+                            reorganizacion.mostrarCartas();
+
+                            break;
+                        }
+
+                        if (!mesa.validarMesa(reorganizacion.getCombinaciones())) {
+
+                            System.out.println("La reorganización no es válida.");
+
+                            mesa.reemplazarMesa(copiaMesa);
+
+                            reorganizacion.limpiar();
+
+                            modoReorganizacion = false;
+
+                            copiaMesa.clear();
+
+                            break;
+                        }
+
+                        mesa.reemplazarMesa(reorganizacion.getCombinaciones());
+
+                        reorganizacion.limpiar();
+
+                        modoReorganizacion = false;
+
+                        copiaMesa.clear();
+
+                        System.out.println();
+                        System.out.println("✔ Reorganización completada correctamente.");
 
                         break;
 

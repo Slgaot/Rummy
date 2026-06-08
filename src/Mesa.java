@@ -140,4 +140,48 @@ public class Mesa {
 
         return puntos;
     }
+
+    public ArrayList<ArrayList<Carta>> getCombinaciones() {
+        return combinaciones;
+    }
+
+    public void eliminarCombinacion(int indice) {
+
+        if (indice >= 0 && indice < combinaciones.size()) {
+            combinaciones.remove(indice);
+        }
+    }
+
+    public ArrayList<Carta> obtenerCombinacion(int indice) {
+
+        if (indice < 0 || indice >= combinaciones.size()) {
+            return null;
+        }
+
+        return combinaciones.get(indice);
+    }
+
+    public void limpiarMesa(){
+
+        combinaciones.clear();
+    }
+
+    public void reemplazarMesa(ArrayList<ArrayList<Carta>> nuevas){
+
+        combinaciones.clear();
+
+        combinaciones.addAll(nuevas);
+    }
+
+    public boolean validarMesa(ArrayList<ArrayList<Carta>> nuevas){
+
+        for(ArrayList<Carta> c:nuevas){
+
+            if(!esValida(c)){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

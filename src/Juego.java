@@ -7,7 +7,40 @@ public class Juego {
 
         Scanner sc = new Scanner(System.in);
 
-        Mazo mazo = new Mazo();
+        System.out.println("========================");
+        System.out.println("        RUMMY");
+        System.out.println("========================");
+        System.out.println("1. Rummy Clásico");
+        System.out.println("2. Rummikub");
+        System.out.println("3. Gin Rummy");
+        System.out.println("4. Rummy Argentino");
+
+        System.out.print("Seleccione modalidad: ");
+
+        int opcionModo = sc.nextInt();
+        sc.nextLine();
+
+        Reglas reglas;
+
+        switch (opcionModo) {
+
+            case 1:
+                reglas = new ReglasClasico();
+                break;
+
+            case 2:
+                reglas = new ReglasRummikub();
+                break;
+
+            case 3:
+                reglas = new ReglasGinRummy();
+                break;
+
+            default:
+                reglas = new ReglasRummyArgentino();
+        }
+
+        Mazo mazo = new Mazo(reglas);
         Mesa mesa = new Mesa();
         Descarte descarte = new Descarte();
 
@@ -25,7 +58,7 @@ public class Juego {
             jugadores.add(new Jugador(nombre));
         }
 
-        int cartasPorJugador = (numJugadores <= 3) ? 13 : 10;
+        int cartasPorJugador = reglas.cartasIniciales();
 
         for (int i = 0; i < cartasPorJugador; i++) {
             for (Jugador j : jugadores) {
@@ -273,9 +306,24 @@ public class Juego {
                             break;
                         }
 
+                        if (!reglas.primeraBajada()) {
+
+                            for (ArrayList<Carta> combinacion : bajadasTurno) {
+
+                                mesa.agregarCombinacion(combinacion);
+                            }
+
+                            System.out.println("Combinaciones bajadas");
+
+                            bajadasTurno.clear();
+                            puntosBajadaTurno = 0;
+
+                            break;
+                        }
+
                         if (!jugadorActual.haHechoPrimeraBajada()) {
 
-                            if (puntosBajadaTurno >= 30) {
+                            if (puntosBajadaTurno >= reglas.puntosPrimeraBajada()) {
 
                                 for (ArrayList<Carta> combinacion : bajadasTurno) {
 
@@ -285,7 +333,7 @@ public class Juego {
                                 jugadorActual.marcarPrimeraBajada();
 
                                 System.out.println(
-                                        "✔ Primera bajada completada (" +
+                                        "Primera bajada completada (" +
                                                 puntosBajadaTurno +
                                                 " puntos)"
                                 );
@@ -296,7 +344,9 @@ public class Juego {
                             } else {
 
                                 System.out.println(
-                                        "Necesitas al menos 30 puntos. Llevas "
+                                        "Necesitas al menos "
+                                                + reglas.puntosPrimeraBajada()
+                                                + " puntos. Llevas "
                                                 + puntosBajadaTurno
                                 );
 
@@ -325,8 +375,13 @@ public class Juego {
                         }
 
                         break;
-
                     case 10:
+
+                        if (!reglas.reorganizarMesa()) {
+
+                            System.out.println("Esta modalidad no permite reorganizar la mesa.");
+                            break;
+                        }
 
                         if (!jugadorActual.haHechoPrimeraBajada()) {
 
@@ -436,6 +491,12 @@ public class Juego {
                         break;
 
                     case 11:
+
+                        if (!reglas.reorganizarMesa()) {
+
+                            System.out.println("Esta modalidad no permite reorganizar la mesa.");
+                            break;
+                        }
 
                         if (!modoReorganizacion) {
 

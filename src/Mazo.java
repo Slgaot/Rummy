@@ -5,13 +5,16 @@ public class Mazo {
 
     private final ArrayList<Carta> cartas;
 
-    public Mazo() {
+    public Mazo(Reglas reglas) {
+
         cartas = new ArrayList<>();
-        crearMazo();
+
+        crearMazo(reglas);
+
         barajar();
     }
 
-    private void crearMazo() {
+    private void crearMazo(Reglas reglas) {
 
         for (Palo palo : Palo.values()) {
 
@@ -29,8 +32,11 @@ public class Mazo {
             }
         }
 
-        cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
-        cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
+        if (reglas.usaJoker()) {
+
+            cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
+            cartas.add(new Carta(Valor.JOKER, Palo.NINGUNO));
+        }
     }
 
     public void barajar() {
